@@ -1,27 +1,35 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { StyleComb } from './style-comb';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+const EXTENSIONS = [
+	'css',
+	'less'
+];
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vscode-style-comb" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscode-style-comb.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Style Comb Formatter!');
-	});
-
-	context.subscriptions.push(disposable);
+function languageSupported(languageId: string) {
+	return EXTENSIONS.includes(languageId);
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {}
+export function activate(context: vscode.ExtensionContext) {
+	vscode.commands.registerCommand('extension.vscode-style-comb', () => {
+		const { activeTextEditor } = vscode.window;
+
+		if (activeTextEditor && languageSupported(activeTextEditor.document.languageId)) {
+			const { document } = activeTextEditor;
+
+			const tabSize = activeTextEditor.options.tabSize as number;
+			const spaceStatus = activeTextEditor.options.insertSpaces as boolean;
+
+			const formattedDocument = StyleComb.styleComb(document, tabSize, spaceStatus);
+
+			const edit = new vscode.WorkspaceEdit();
+
+			for (let i = 0; i < document.lineCount; i++) {
+				const line = document.lineAt(i);
+				edit.replace(document.uri, line.range, formattedDocument[i]);
+			}
+
+			return vscode.workspace.applyEdit(edit);
+		}
+	});
+}
