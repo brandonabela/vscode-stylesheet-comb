@@ -1,0 +1,25 @@
+//Footer
+footer {
+  @include display(flex);
+  @include justify-content(space-between);
+  width: 100%;
+
+  &.dark {
+    background: rgba(0, 0, 0, 1);
+  }
+
+  .container {
+    padding: 1em;
+  }
+}
+
+//Footer Buttons
+footer .btn {
+  @include flex(0 0 auto);
+  color: $red;
+}
+
+//Footer Copyright Message
+footer .copyright {
+  text-align: center;
+}
