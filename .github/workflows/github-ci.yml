@@ -1,0 +1,28 @@
+name: Main CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: 🧪 Unit Test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: npm install
+      - run: npm test
+  lint:
+    name: ✅ Lint
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: npm install
+      - run: npm run lint
+  build:
+    name: 🛠 Build
+    runs-on: windows-latest
+    # This job will only run if both `test` and `lint` jobs run successfully.
+    needs: [test, lint]
+    steps:
+      - uses: actions/checkout@v1
+      - run: npm install
+      - run: npm build
