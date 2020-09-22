@@ -1,10 +1,37 @@
-@primarycolor: #FF7F50;
-@color: #800080;
+// Variables
 
-h2 {
-  color: @primarycolor;
+@link-color: #428bca; // sea blue
+@link-color-hover: darken(@link-color, 10%);
+
+// Usage
+
+a,
+.link {
+  color: @link-color;
 }
 
-h3 {
-  color: @color;
+a:hover {
+  color: @link-color-hover;
 }
+
+.border(@width; @style; @color) {
+  border: @width @style @color;
+}
+
+.header {
+  .border(2px; dashed; green); /* Example */
+}
+
+.make-variants(@i:1) when (@i =< 3) {
+  .selector-@{i},
+  .variant-@{i} {
+    width: @i * 40px;
+    height: @i * 20px;
+    background-color: orange;
+    margin-bottom: 10px;
+  }
+
+  .make-variants(@i + 1); // increment function
+}
+
+.make-variants();

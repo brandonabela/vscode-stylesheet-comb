@@ -1,17 +1,20 @@
+/* Applies to the entire body of the HTML document */
+
 body {
   padding-left: 11em;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  color: purple;
+  font-family: Georgia, "Times New Roman", Times, serif; /* Setting font family */
+  color: purple; /* Sets the {text} colour, to: purple */
   background-color: #d8da3d;
 }
 
-ul.navbar {
+/* Applying css to navbar */
+
+nav,
+ul.navbar { /* Start of selector */
   list-style-type: none;
-  padding: 0;
-  margin: 0;
   position: absolute;
-  top: 2em;
-  left: 1em;
+  top: 2em; /* This is another comment */
+  background-image: url(tiger.jpg);
   width: 9em;
 }
 
@@ -19,12 +22,16 @@ h1 {
   font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif;
 }
 
-ul.navbar li {
+/*
+ul.navbar li
+{
   background: white;
-  margin: 0.5em 0;
-  padding: 0.3em;
+  margin: 0.5em 0; padding: 0.3em;
   border-right: 1em solid black;
+
+
 }
+*/
 
 ul.navbar a {
   text-decoration: none;
@@ -32,10 +39,6 @@ ul.navbar a {
 
 a:link {
   color: blue;
-}
-
-a:visited {
-  color: purple;
 }
 
 address {

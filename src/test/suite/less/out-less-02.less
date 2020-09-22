@@ -1,18 +1,19 @@
-// Variables
-@link-color: #428bca; // sea blue
-@link-color-hover: darken(@link-color, 10%);
+@detached-ruleset: {
+  caller-variable: @caller-variable; // variable is undefined here
 
-// Usage
-a,
-.link {
-  color: @link-color;
-}
+  .caller-mixin(); // mixin is undefined here
+}; // end of the detached ruleset function
 
-a:hover {
-  color: @link-color-hover;
-}
+selector {
+  // use detached ruleset
 
-.widget {
-  color: #fff;
-  background: @link-color;
+  @detached-ruleset();
+
+  // define variable and mixin needed inside the detached ruleset
+
+  @caller-variable: value;
+
+  .caller-mixin() {
+    variable: declaration;
+  }
 }

@@ -6,23 +6,19 @@ body {
     width:500px;
   }
 }
-header {
-  h1 {
-    font-size:26px; margin-bottom:26px;
-  }
-}
-div[role="main"] {
-  @include background-image(linear-gradient(lighten($color1, 30%), lighten($color2, 30%)));
-  @include border-radius($border-radius * 3.5, $border-radius * 3.5 ); 
-  border:3px solid $color2;
-  padding:$border-radius;
-  margin-bottom:25px; 
-  
-  ul {   padding-top:14px;   }
-  li {   color:$fontcolor1;  margin-bottom:12px;  }
-}
 
-button {
-  //leverages the buttons mixin
-  @include buttons();
+/*
+Sample mixin which creates a button and the following states (based on classes):
+- primary
+- disabled
+(based on pseudo-selector)
+- :hover {}
+*/
+
+@mixin buttons($basicBorder:1px, $gradient1:#fff, $gradient2:#d8dee7){
+  button{
+    border:$basicBorder solid #acbed3;
+    //Background-image mixin:  http://compass-style.org/reference/compass/css3/images/
+    @include background-image(linear-gradient($gradient1, $gradient2));
+  }
 }

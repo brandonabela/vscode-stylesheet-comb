@@ -2,98 +2,28 @@
 @import "blueprint";
 @import "blueprint/fancy_type";
 
-$blueprint-grid-columns: 5;
-$blueprint-grid-width: 150px;
-$blueprint-grid-margin: 20px;
-
 $blueprint-font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
-$blueprint-fixed-font-family: "andale mono", "lucida console", monospace;
+$blueprint-fixed-font-family: 'andale mono', 'lucida console', monospace;
 $blueprint-font-size: 12px;
-
-$text-color: #555555;
-$light-text-color: #a0a0a0;
-$quote-text-color: #f27a00;
-$disclosure-text-color: #ed7c06;
-
-$thick-border: 8px solid black;
-$dotted-border: 1px dotted #999999;
-
-$header-background-color: #f07c05;
-$paging-background-color: black;
-$unfocused-background-color: #f1f0ec;
-$quote-background-color: #f1f0ec;
-
-$story-title-color: #f07c05;
 
 @include global-reset;
 @include blueprint-typography;
 
-body {
-  background: $unfocused-background-color image_url("white-bg.jpg") repeat-y 50% 0;
-  color: $text-color;
-}
+ul {
+  @include horizontal-list;
 
-.content_wrapper {
-  @include container;
-  width: 910px;
-}
+  padding: 0 0 0 25px;
 
-#header {
-  height: 72px;
-  background: $header-background-color;
-  @include clearfix;
-
-  ul {
-    @include horizontal-list;
-    padding: 0 0 0 25px;
-
-    li {
-      @include incr(18px);
-      padding: 0 20px 0 0;
-      text-transform: uppercase;
-
-      a {
-        color: #febf0f;
-        text-decoration: none;
-        width: 100px;
-        height: 72px;
-        display: block;
-      }
-
-      &#header-threads a {
-        @include replace-text("header-threads-text.jpg");
-      }
-
-      &#header-timeline a {
-        @include replace-text("header-timeline-text.jpg");
-      }
-    }
+  &#header-threads a {
+    @include replace-text("header-threads-text.jpg");
   }
-}
 
-#paging {
-  background: $paging-background-color;
-  height: 33px;
-  padding: 15px 0 0 0;
-
-  h6 {
-    @include float-left;
-    color: #908f8b;
-    padding-right: 20px;
-    text-transform: uppercase;
-
-    a {
-      color: #f07b07;
-    }
+  &#header-timeline a {
+    @include replace-text("header-timeline-text.jpg");
   }
 }
 
 #thread {
-  @include container;
-  width: 910px;
-  top: 0px;
-  left: 0px;
-
   @include transition-property(left);
   @include transition-duration(0.5s);
   @include transition-timing-function(ease-in-out);
