@@ -3,14 +3,16 @@ import { StyleComb } from './style-comb';
 
 const EXTENSIONS = [
 	'css',
-	'less'
+	'less',
+	'sass',
+	'scss'
 ];
 
 function languageSupported(languageId: string) {
 	return EXTENSIONS.includes(languageId);
 }
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate() {
 	vscode.commands.registerCommand('extension.vscode-style-comb', () => {
 		const { activeTextEditor } = vscode.window;
 
@@ -33,3 +35,5 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 }
+
+export function deactivate() { }

@@ -14,16 +14,12 @@ class TestCase {
 const testCases: TestCase[] = [
 	new TestCase('CSS Program 01', 'css/in-css-01.css', 'css/out-css-01.css'),
 	new TestCase('CSS Program 02', 'css/in-css-02.css', 'css/out-css-02.css'),
-	new TestCase('CSS Program 03', 'css/in-css-03.css', 'css/out-css-03.css'),
 	new TestCase('LESS Program 01', 'less/in-less-01.less', 'less/out-less-01.less'),
 	new TestCase('LESS Program 02', 'less/in-less-02.less', 'less/out-less-02.less'),
-	new TestCase('LESS Program 03', 'less/in-less-03.less', 'less/out-less-03.less'),
-	// new TestCase('SASS Program 01', 'sass/in-sass-01.sass', 'sass/out-sass-01.sass'),
-	// new TestCase('SASS Program 02', 'sass/in-sass-02.sass', 'sass/out-sass-02.sass'),
-	// new TestCase('SASS Program 03', 'sass/in-sass-03.sass', 'sass/out-sass-03.sass'),
-	// new TestCase('SCSS Program 01', 'scss/in-scss-01.scss', 'scss/out-scss-01.scss'),
-	// new TestCase('SCSS Program 02', 'scss/in-scss-02.scss', 'scss/out-scss-02.scss'),
-	// new TestCase('SCSS Program 03', 'scss/in-scss-03.scss', 'scss/out-scss-03.scss')
+	new TestCase('SASS Program 01', 'sass/in-sass-01.sass', 'sass/out-sass-01.sass'),
+	new TestCase('SASS Program 02', 'sass/in-sass-02.sass', 'sass/out-sass-02.sass'),
+	new TestCase('SCSS Program 01', 'scss/in-scss-01.scss', 'scss/out-scss-01.scss'),
+	new TestCase('SCSS Program 02', 'scss/in-scss-02.scss', 'scss/out-scss-02.scss')
 ];
 
 const rootPath = path.join(__dirname, '../../../src/test/suite');

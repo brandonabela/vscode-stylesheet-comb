@@ -1,328 +1,240 @@
 import * as vscode from 'vscode';
+import { AstFunction } from './ast/ast-function';
+import { AstNode } from './ast/ast-node';
+import { AstComment } from './ast/statement/ast-comment';
+import { AstUnclassified } from './ast/statement/ast-unclassified';
+import { FunctionUtil } from './construct-util/function-util';
+import { Comment } from './construct/comment';
+import { Include } from './construct/include';
+import { Loop } from './construct/loop';
+import { Mixin } from './construct/mixin';
+import { MixinCall } from './construct/mixin-call';
+import { Property } from './construct/property';
+import { Ruleset } from './construct/ruleset';
+import { Selector } from './construct/selector';
+import { Unclassified } from './construct/unclassified';
+import { Variable } from './construct/variable';
+import { StyleUtil } from './style-util';
 
 export class StyleComb {
-    static styleComb(document: vscode.TextDocument, tabSize: number, isSpaces: boolean): string[] {
-        const unformattedFile = this.readDocument(document);
-        const formattedFile = StyleComb.formatDocument(unformattedFile, tabSize, isSpaces);
+    static styleComb(vsFile: vscode.TextDocument, tabSize: number, isSpaces: boolean): string[] {
+        const document = this.readFile(vsFile);
+        const tokens = this.tokenise(document);
 
-        return formattedFile;
+        const categories = this.getCategories(tokens);
+        const stylesheet = this.getStylesheet(categories, tabSize, isSpaces);
+
+        return this.separateNodes(stylesheet).split('\n');
     }
 
-    static readDocument(document: vscode.TextDocument): string[] {
-        let unformattedFile: string[] = [];
+    static readFile(vsFile: vscode.TextDocument): string[] {
+        let inBlockComment = false;
+        let document: string[] = [];
 
-        for (let i = 0; i < document.lineCount; i++) {
-            const line = document.lineAt(i).text.trim();
+        for (let i = 0; i < vsFile.lineCount; i++) {
+            // Read line and trim extra spaces from the right
 
-            if (line !== '') {
-                unformattedFile.push(line);
+            const line = vsFile.lineAt(i).text.trimRight();
+
+            // Keep new lines within block comment only
+
+            if (line.indexOf('/*') !== -1) {
+                inBlockComment = true;
+            }
+
+            if (line.indexOf('*/') !== -1) {
+                inBlockComment = false;
+            }
+
+            if (inBlockComment || line !== '') {
+                document.push(line);
             }
         }
 
-        return unformattedFile;
-    }
-
-    static formatDocument(unformattedFile: string[], tabSize: number, isSpaces: boolean): string[] {
-        let formattedFile: string[] = [];
-
-        formattedFile = this.removeDoubleSpacing(unformattedFile);
-
-        formattedFile = this.splitOpenCurly(formattedFile);
-        formattedFile = this.splitCloseCurly(formattedFile);
-
-        formattedFile = this.splitProperties(formattedFile);
-        formattedFile = this.splitClasses(formattedFile);
-        formattedFile = this.splitVariables(formattedFile);
-        formattedFile = this.splitComments(formattedFile);
-
-        formattedFile = this.mergeProperty(formattedFile);
-        formattedFile = this.formatProperty(formattedFile);
-        formattedFile = this.indentFile(formattedFile, tabSize, isSpaces);
-
-        return formattedFile;
-    }
-
-    static getLineCommand(line: string): string {
-        let singleCommentPosition = line.indexOf('//');
-        let multiCommentPosition = line.indexOf('/*');
-
-        if (singleCommentPosition !== -1 || multiCommentPosition !== -1) {
-            return line.substring(0, Math.max(singleCommentPosition, multiCommentPosition));
-        }
-
-        return line;
-    }
-
-    static getLineComment(line: string): string {
-        let singleCommentPosition = line.indexOf('//');
-        let multiCommentPosition = line.indexOf('/*');
-
-        if (singleCommentPosition !== -1 || multiCommentPosition !== -1) {
-            return line.substring(Math.max(singleCommentPosition, multiCommentPosition));
-        }
-
-        return '';
-    }
-
-    static insert(array: any[], index: number, insertArray: any[], withReplace: boolean = true): any[] {
-        return [
-            ...array.slice(0, index),
-            ...insertArray,
-            ...array.slice(index + (withReplace ? 1 : 0))
-        ];
-    }
-
-    static split(line: string, delimiter: string, preSpace: boolean = false, postSpace: boolean = false): string[] {
-        let command = this.getLineCommand(line).trim();
-        let comment = this.getLineComment(line).trim();
-
-        let commands = command.split(delimiter);
-        commands = commands.map((line) => line.trim());
-
-        for (let i = 0; i < commands.length - 1; i++) {
-            commands[i] += (preSpace ? ' ' : '') + delimiter + (postSpace ? ' ' : '');
-        }
-
-        if (commands[commands.length - 1] === '') {
-            commands.pop();
-        }
-
-        if (comment !== '') {
-            commands[commands.length - 1] += ' ' + comment;
-        }
-
-        return commands;
-    }
-
-    static removeDoubleSpacing(document: string[]): string[] {
-        for (let i = 0; i < document.length; i++) {
-            document[i] = document[i].replace(/\s+/g, ' ');
-        }
+        // Return document
 
         return document;
     }
 
-    static splitOpenCurly(document: string[]): string[] {
-        for (let i = 0; i < document.length; i++) {
-            let command = this.getLineCommand(document[i]).trim();
+    static tokenise(document: string[]): string[] {
+        let tokens = document;
 
-            let openCurlyPosition = command.indexOf('{');
+        tokens = StyleUtil.splitBlockComments(tokens);
 
-            if (openCurlyPosition !== -1) {
-                const splitOpenCurly = this.split(document[i], '{', true);
+        tokens = StyleUtil.splitArray(tokens, '{', true, ['@', '#']);
+        tokens = StyleUtil.splitArray(tokens, '}', false, [',', '-']);
+        tokens = StyleUtil.splitArray(tokens, '(', false);
+        tokens = StyleUtil.splitArray(tokens, ')', false, [';']);
+        tokens = StyleUtil.splitArray(tokens, ',', false);
+        tokens = StyleUtil.splitArray(tokens, ';', false);
 
-                document = this.insert(document, i, splitOpenCurly);
-                i += (splitOpenCurly.length - 1);
-            } else if (command !== '' && i < document.length - 1) {
-                let nextCommand = this.getLineCommand(document[i + 1]).trim();
-
-                let nextOpenCurlyPosition = nextCommand.indexOf('{');
-
-                if (nextOpenCurlyPosition !== -1) {
-                    document[i] = [document[i], document[i + 1]].join('');
-
-                    document.splice(i + 1, 1);
-                    i--;
-                }
-            }
-        }
-
-        return document;
+        return tokens;
     }
 
-    static splitCloseCurly(document: string[]): string[] {
-        for (let i = 0; i < document.length; i++) {
-            let command = this.getLineCommand(document[i]).trim();
+    static getCategories(tokens: string[]): AstNode[] {
+        let categories: AstNode[] = [];
 
-            let semicolonPosition = command.indexOf(';');
-            let closeCurlyPosition = command.indexOf('}');
+        for (let i = 0; i < tokens.length; i++) {
+            // Start with skip stride set to 1
 
-            let positionDifference = semicolonPosition - closeCurlyPosition;
+            let skipStride = 1;
 
-            let delimiter = '}';
+            // Attempt to create every possible category
 
-            if (closeCurlyPosition !== -1 && 0 < positionDifference && positionDifference <= 2) {
-                delimiter = '};';
+            const loop = Loop.constructOpenLoop(tokens, i);
+            const mixin = Mixin.constructOpenMixin(tokens, i);
+            const ruleset = Ruleset.constructRuleset(tokens, i);
+            const selector = Selector.constructOpenSelector(tokens, i);
+            const variable = Variable.constructVariable(tokens, i);
+            const mixinCall = MixinCall.constructMixinCall(tokens, i);
+            const property = Property.constructProperty(tokens, i);
+            const include = Include.constructInclude(tokens, i);
+            const comment = Comment.constructComment(tokens, i);
+            const unclassified = new AstUnclassified(tokens[i], '');
 
-                document[i] = document[i].substring(0, closeCurlyPosition) +
-                    document[i].substring(closeCurlyPosition, semicolonPosition + 1).replace(/\s+/g, '') +
-                    document[i].substring(semicolonPosition + 1, document[i].length);
+            // Add the first valid category hence order of if statements is important
+
+            if (loop !== undefined) {
+                skipStride = Loop.openLoopTotalStride(tokens, i);
+                categories.push(loop);
+            } else if (mixin !== undefined) {
+                skipStride = Mixin.openMixinTotalStride(tokens, i);
+                categories.push(mixin);
+            } else if (ruleset !== undefined) {
+                skipStride = Ruleset.openRulesetTotalStride(tokens, i);
+                categories.push(ruleset);
+            } else if (selector !== undefined) {
+                const deleteStride = Selector.openSelectorStride(tokens, i);
+                categories.splice(categories.length - deleteStride, deleteStride);
+
+                skipStride = Selector.openSelectorLastCommentStride(tokens, i);
+                categories.push(selector);
+            } else if (variable !== undefined) {
+                skipStride = Variable.variableTotalStride(tokens, i);
+                categories.push(variable);
+            } else if (mixinCall !== undefined) {
+                skipStride = MixinCall.mixinCallTotalStride(tokens, i);
+                categories.push(mixinCall);
+            } else if (property !== undefined) {
+                skipStride = Property.propertyTotalStride(tokens, i);
+                categories.push(property);
+            } else if (include !== undefined) {
+                skipStride = Include.includeTotalStride(tokens, i);
+                categories.push(include);
+            } else if (comment !== undefined) {
+                skipStride = Comment.commentStride(tokens, i);
+                categories.push(comment);
+            } else if (tokens[i].trim() !== '') {
+                categories.push(unclassified);
             }
 
-            if (closeCurlyPosition !== -1) {
-                let splitCloseCurly = this.split(document[i], delimiter);
+            // Skipping lines based on the category stride
 
-                document = this.insert(document, i, splitCloseCurly);
-                i += (splitCloseCurly.length - 1);
-            }
+            i += skipStride !== -1 ? (skipStride - 1) : 0;
         }
 
-        for (let i = 0; i < document.length - 1; i++) {
-            let command = this.getLineCommand(document[i]).trim();
-            let nextCommand = this.getLineCommand(document[i + 1]).trim();
+        // Return categories
 
-            let closeCurlyPosition = command.indexOf('}');
-
-            if (closeCurlyPosition !== -1 && nextCommand !== '}') {
-                document = this.insert(document, i + 1, [''], false);
-                i++;
-            }
-        }
-
-        return document;
+        return categories;
     }
 
-    static splitProperties(document: string[]): string[] {
-        for (let i = 0; i < document.length; i++) {
-            let command = this.getLineCommand(document[i]).trim();
+    static getStylesheet(categories: AstNode[], tabSize: number, isSpaces: boolean): AstNode[] {
+        let ast: AstNode[] = [];
 
-            let semicolonPosition = command.indexOf(';');
+        for (let i = 0; i < categories.length; i++) {
+            // Start with skip stride set to 1
 
-            if (semicolonPosition !== -1) {
-                const splitProperties = this.split(document[i], ';');
+            let skipStride = 1;
 
-                document = this.insert(document, i, splitProperties);
-                i += (splitProperties.length - 1);
+            // Add the first valid category implying that the order of the if statements is important
+
+            const astFunction = FunctionUtil.constructFunction(categories, i, tabSize, isSpaces);
+
+            if (astFunction !== undefined) {
+                skipStride = FunctionUtil.functionTotalStride(categories, i);
+                ast.push(astFunction);
+            } else if (Variable.isVariable(categories, i)) {
+                const indentSize = FunctionUtil.getIndent(tabSize, isSpaces, 1);
+                const variable = FunctionUtil.getVariable(categories, i, '', indentSize);
+                ast.push(variable);
+            } else if (Unclassified.isUnclassified(categories, i)) {
+                const unclassified = categories[i] as AstUnclassified;
+                unclassified.line = unclassified.line.trim();
+                ast.push(unclassified);
+            } else {
+                ast.push(categories[i]);
             }
+
+            // Skipping lines based on the category stride
+
+            i += skipStride !== -1 ? (skipStride - 1) : 0;
         }
 
-        return document;
+        // Return ast
+
+        return ast;
     }
 
-    static splitClasses(document: string[]): string[] {
-        for (let i = 0; i < document.length; i++) {
-            let command = this.getLineCommand(document[i]).trim();
+    static needDoubleNewLine(stylesheet: AstNode[], index: number): boolean {
+        // Check if next element is present
 
-            let commaPosition = command.indexOf(',');
-            let openCurlyPosition = command.indexOf('{');
-            let closeCurlyPosition = command.indexOf('}');
+        const hasNextElement = index < stylesheet.length - 1;
 
-            if (commaPosition !== -1 && (commaPosition < openCurlyPosition || commaPosition < closeCurlyPosition)) {
-                const splitClasses = this.split(document[i], ',');
+        if (hasNextElement) {
+            // Certain elements should not be separated by an enter
 
-                document = this.insert(document, i, splitClasses);
-                i += (splitClasses.length - 1);
+            const twoInclude = Include.isInclude(stylesheet, index) && Include.isInclude(stylesheet, index + 1);
+            const twoMixinCall = MixinCall.isMixinCall(stylesheet, index) && MixinCall.isMixinCall(stylesheet, index + 1);
+            const twoProperty = Property.isProperty(stylesheet, index) && Property.isProperty(stylesheet, index + 1);
+            const twoUnclassified = Unclassified.isUnclassified(stylesheet, index) && Unclassified.isUnclassified(stylesheet, index + 1);
+            const twoVariables = Variable.isVariable(stylesheet, index) && Variable.isVariable(stylesheet, index + 1);
+
+            // Check if current and next elements are line comments
+
+            if (Comment.isComment(stylesheet, index) && Comment.isComment(stylesheet, index + 1)) {
+                const currentComment = stylesheet[index] as AstComment;
+                const nextComment = stylesheet[index + 1] as AstComment;
+
+                return currentComment.isBlock && nextComment.isBlock;
             }
+
+            return !(twoInclude || twoMixinCall || twoProperty || twoUnclassified || twoVariables);
         }
 
-        return document;
+        // Return false if next element is not present
+
+        return false;
     }
 
-    static splitVariables(document: string[]): string[] {
-        for (let i = 0; i < document.length - 1; i++) {
-            let command = this.getLineCommand(document[i]).trim();
-            let nextCommand = this.getLineCommand(document[i + 1]).trim();
+    static separateNodes(stylesheet: AstNode[]): string {
+        let separatedNodes = '';
 
-            let atPosition = command.indexOf('@');
-            let colonPosition = command.indexOf(':');
+        // Loop through the stylesheet nodes
 
-            let nextAtPosition = nextCommand.indexOf('@');
-            let nextColonPosition = nextCommand.indexOf(':');
+        for (let i = 0; i < stylesheet.length; i++) {
+            // Check if enter is required
 
-            if (atPosition !== -1 && atPosition < colonPosition && document[i + 1] !== '' && nextAtPosition === -1 && nextColonPosition === -1) {
-                document = this.insert(document, i + 1, [''], false);
-                i++;
+            const isDoubleNewLine = this.needDoubleNewLine(stylesheet, i);
+
+            // Adding formatted node
+
+            if (FunctionUtil.isFunction(stylesheet, i)) {
+                const astFunction = stylesheet[i] as AstFunction;
+
+                separatedNodes += astFunction.toStringHead();
+                separatedNodes += StyleComb.separateNodes(astFunction.properties);
+                separatedNodes += astFunction.toStringTail();
+            } else {
+                separatedNodes += stylesheet[i].toString();
             }
+
+            // Adding double new line if required
+
+            separatedNodes += isDoubleNewLine ? '\n\n' : '\n';
         }
 
-        return document;
-    }
+        // Return separated nodes
 
-    static splitComments(document: string[]): string[] {
-        for (let i = 1; i < document.length; i++) {
-            let command = this.getLineCommand(document[i]).trim();
-            let comment = this.getLineComment(document[i]).trim();
-
-            let prevCommand = this.getLineCommand(document[i - 1]).trim();
-
-            let prevSemicolonPosition = prevCommand.indexOf(';');
-
-            if (command === '' && comment !== '' && prevSemicolonPosition !== -1) {
-                document = this.insert(document, i, [''], false);
-                i++;
-            }
-        }
-
-        return document;
-    }
-
-    static mergeProperty(document: string[]): string[] {
-        for (let i = 0; i < document.length - 1; i++) {
-            let command = this.getLineCommand(document[i]).trim();
-
-            let colonPosition = command.indexOf(':');
-            let semicolonPosition = command.indexOf(';');
-
-            if (colonPosition !== -1 && semicolonPosition === -1) {
-                let nextCommand = this.getLineCommand(document[i + 1]).trim();
-                let nextComment = this.getLineComment(document[i + 1]).trim();
-
-                let nextColonPosition = nextCommand.indexOf(':');
-                let nextSemicolonPosition = nextCommand.indexOf(';');
-
-                if (nextColonPosition === -1 && nextSemicolonPosition !== -1) {
-                    document[i] = command + ' ' + nextCommand + (nextComment !== '' ? ' ' + nextComment : '');
-
-                    document.splice(i + 1, 1);
-                    i--;
-                }
-            }
-        }
-
-        return document;
-    }
-
-    static formatProperty(document: string[]): string[] {
-        for (let i = 0; i < document.length; i++) {
-            let command = this.getLineCommand(document[i]).trim();
-            let comment = this.getLineComment(document[i]).trim();
-
-            let colonPosition = command.indexOf(':');
-            let semicolonPosition = command.indexOf(';');
-            let openCurlyPosition = command.indexOf('{');
-            let closeCurlyPosition = command.indexOf('}');
-
-            if (colonPosition !== -1 && openCurlyPosition === -1 && closeCurlyPosition === -1) {
-                let propertyName = command.substring(0, colonPosition + 1).trim();
-                let propertyValue = command.substring(colonPosition + 1).trim();
-
-                let commaPosition = propertyValue.indexOf(',');
-                let openRoundPosition = propertyValue.indexOf('(');
-                let closeRoundPosition = propertyValue.indexOf(')');
-
-                if (commaPosition !== -1 && openRoundPosition < closeRoundPosition) {
-                    propertyValue = this.split(propertyValue, ',', false, true).join('');
-                }
-
-                document[i] = propertyName + ' ' + propertyValue + (semicolonPosition === -1 ? ';' : '') + (comment !== '' ? ' ' + comment : '');
-            }
-        }
-
-        return document;
-    }
-
-    static indentFile(document: string[], tabSize: number, isSpaces: boolean): string[] {
-        let indent = 0;
-
-        for (let i = 0; i < document.length; i++) {
-            let command = this.getLineCommand(document[i]).trim();
-
-            let openCurlyPosition = command.indexOf('{');
-            let closeCurlyPosition = command.indexOf('}');
-
-            if (closeCurlyPosition !== -1) {
-                indent -= tabSize;
-            }
-
-            if (document[i] !== '') {
-                document[i] = (isSpaces ? ' ' : '\t').repeat(indent) + document[i];
-            }
-
-            if (openCurlyPosition !== -1) {
-                indent += tabSize;
-            }
-        }
-
-        return document;
+        return separatedNodes;
     }
 }
