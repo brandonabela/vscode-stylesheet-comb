@@ -1,8 +1,12 @@
 /* Applies to the entire body of the HTML document */
 
 body {
-  padding-left: 11em;
   font-family: Georgia, "Times New Roman", Times, serif; /* Setting font family */
+
+  /* Comment for padding left property */
+
+  padding-left: 11em;
+
   color: purple; /* Sets the {text} colour, to: purple */
   background-color: #d8da3d;
 }
@@ -11,11 +15,14 @@ body {
 
 nav,
 ul.navbar { /* Start of selector */
-  list-style-type: none;
   position: absolute;
   top: 2em; /* This is another comment */
-  background-image: url(tiger.jpg);
+
   width: 9em;
+
+  list-style-type: none;
+
+  background-image: url(tiger.jpg);
 }
 
 h1 {
@@ -44,5 +51,6 @@ a:link {
 address {
   margin-top: 1em;
   padding-top: 1em;
+
   border-top: thin dotted;
 }

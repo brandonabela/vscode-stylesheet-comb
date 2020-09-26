@@ -10,9 +10,9 @@ $blueprint-font-size: 12px;
 @include blueprint-typography;
 
 ul {
-  @include horizontal-list;
-
   padding: 0 0 0 25px;
+
+  @include horizontal-list;
 
   &#header-threads a {
     @include replace-text("header-threads-text.jpg");

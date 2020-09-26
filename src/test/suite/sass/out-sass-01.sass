@@ -31,6 +31,7 @@ $settings: (
   @while $i <= map-get($settings, "columns") {
     .col-#{$key}-#{$i} {
       float: left;
+
       width: 100% * $i / map-get($settings, "columns");
     }
 

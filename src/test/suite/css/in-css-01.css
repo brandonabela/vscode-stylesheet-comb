@@ -1,5 +1,6 @@
 /* Applies to the entire body of the HTML document */
 body {
+  /* Comment for padding left property */
   padding-left: 11em;
   font-family: Georgia, "Times New Roman",
         Times, serif;     /* Setting font family */

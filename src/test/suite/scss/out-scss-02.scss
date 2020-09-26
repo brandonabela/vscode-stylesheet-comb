@@ -3,8 +3,9 @@
 @mixin card($width, $height, $bg, $border) {
   width: $width;
   height: $height;
-  background: $bg;
+
   border: $border;
+  background: $bg;
 }
 
 .card-1 {

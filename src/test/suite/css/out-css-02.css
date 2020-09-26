@@ -15,9 +15,10 @@
 */
 
 body {
-    background-color: #2f4f4f;
-    color: azure;
     font-size: 1.1em; /* Setting font size to 1.1em */
+
+    color: azure;
+    background-color: #2f4f4f;
 }
 
 h1 {
