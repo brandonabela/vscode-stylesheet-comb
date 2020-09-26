@@ -3,6 +3,7 @@ import { AstFunction } from './ast/ast-function';
 import { AstNode } from './ast/ast-node';
 import { AstComment } from './ast/statement/ast-comment';
 import { AstUnclassified } from './ast/statement/ast-unclassified';
+import { Combing } from './combing/combing';
 import { FunctionUtil } from './construct-util/function-util';
 import { Comment } from './construct/comment';
 import { Include } from './construct/include';
@@ -23,8 +24,9 @@ export class StyleComb {
 
         const categories = this.getCategories(tokens);
         const stylesheet = this.getStylesheet(categories, tabSize, isSpaces);
+        const combing = Combing.combStylesheet(stylesheet);
 
-        return this.separateNodes(stylesheet).split('\n');
+        return this.separateNodes(combing).split('\n');
     }
 
     static readFile(vsFile: vscode.TextDocument): string[] {
@@ -226,6 +228,16 @@ export class StyleComb {
                 separatedNodes += astFunction.toStringTail();
             } else {
                 separatedNodes += stylesheet[i].toString();
+            }
+
+            // Do not apply new liens if node is unclassified
+
+            if (i < stylesheet.length - 1 && Unclassified.isUnclassified(stylesheet, i + 1)) {
+                const astUnclassified = stylesheet[i + 1] as AstUnclassified;
+
+                if (astUnclassified.line === '') {
+                    continue;
+                }
             }
 
             // Adding double new line if required

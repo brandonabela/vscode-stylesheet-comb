@@ -15,6 +15,10 @@ import { Variable } from "../construct/variable";
 import { ConstructUtil } from "./construct-util";
 
 export class FunctionUtil {
+    static isFunction(categories: AstNode[], index: number): boolean {
+        return categories[index] instanceof AstFunction;
+    }
+
     static getIndent(tabSize: number, isSpaces: boolean, depth: number): string {
         return (isSpaces ? ' ' : '\t').repeat(tabSize * depth);
     }
@@ -79,10 +83,6 @@ export class FunctionUtil {
         // Return undefined if not a close selector
 
         return undefined;
-    }
-
-    static isFunction(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstFunction;
     }
 
     static functionStride(categories: AstNode[], index: number): number {

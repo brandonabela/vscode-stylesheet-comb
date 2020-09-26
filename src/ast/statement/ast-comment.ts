@@ -14,11 +14,11 @@ export class AstComment extends AstStatement {
     }
 
     private getBlockComment(): string {
-        const indent = this.comments.length > 1 ? this.indent : '';
+        const indent = this.comments.length === 1 ? this.indent : '';
 
-        return indent + '/*' + (this.comments.length > 1 ? '\n' : ' ') +
-            this.comments.map(comment => indent + comment).join('\n') +
-            (this.comments.length > 1 ? '\n' : ' ') + indent + '*/';
+        return indent + '/*' + (this.comments.length !== 1 ? '\n' : ' ') +
+            this.comments.map(comment => comment).join('\n') +
+            (this.comments.length !== 1 ? '\n' : ' ') + '*/';
     }
 
     toString(): string {

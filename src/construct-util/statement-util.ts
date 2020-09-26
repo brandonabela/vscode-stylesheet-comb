@@ -1,6 +1,12 @@
+import { AstNode } from "../ast/ast-node";
+import { AstStatement } from "../ast/ast-statement";
 import { ConstructUtil } from "./construct-util";
 
 export class StatementUtil {
+    static isStatement(categories: AstNode[], index: number): boolean {
+        return categories[index] instanceof AstStatement;
+    }
+
     static statementStride(tokens: string[], index: number): number {
         // Store stride between colon and semicolon or open curly bracket
 
