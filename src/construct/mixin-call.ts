@@ -4,8 +4,8 @@ import { ConstructUtil } from "../construct-util/construct-util";
 import { MixinUtil } from "../construct-util/mixin-util";
 
 export class MixinCall {
-    static isMixinCall(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstMixinCall;
+    static isMixinCall(astNode: AstNode): boolean {
+        return astNode instanceof AstMixinCall;
     }
 
     private static mixinCallStride(tokens: string[], index: number): number {

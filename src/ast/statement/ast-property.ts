@@ -13,6 +13,6 @@ export class AstProperty extends AstStatement {
     }
 
     toString(): string {
-        return this.indent + this.property + ': ' + this.value.replace(/\s+/g, ' ') + ';' + AstUtil.getSideComment(this.sideComment);
+        return this.indent + this.property + ': ' + this.value + ';' + AstUtil.getSideComment(this.sideComment);
     }
 }

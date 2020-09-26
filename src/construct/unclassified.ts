@@ -4,13 +4,13 @@ import { ConstructUtil } from "../construct-util/construct-util";
 import { Comment } from "./comment";
 
 export class Unclassified {
-    static isUnclassified(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstUnclassified;
+    static isUnclassified(astNode: AstNode): boolean {
+        return astNode instanceof AstUnclassified;
     }
 
     static unclassifiedStride(categories: AstNode[], index: number): number {
         for (let i = index + 1; i < categories.length; i++) {
-            if (!this.isUnclassified(categories, i)) {
+            if (!Unclassified.isUnclassified(categories[i])) {
                 return i - index;
             }
         }

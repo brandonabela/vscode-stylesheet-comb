@@ -1,11 +1,56 @@
-import { ConstructUtil } from "./construct-util/construct-util";
+import * as vscode from 'vscode';
+import { ConstructUtil } from '../construct-util/construct-util';
 
-export class StyleUtil {
+export class PreProcessing {
+    static readFile(vsFile: vscode.TextDocument): string[] {
+        let inBlockComment = false;
+        let document: string[] = [];
+
+        for (let i = 0; i < vsFile.lineCount; i++) {
+            // Read line and trim extra spaces from the right
+
+            const line = vsFile.lineAt(i).text.trimRight();
+
+            // Keep new lines within block comment only
+
+            if (line.indexOf('/*') !== -1) {
+                inBlockComment = true;
+            }
+
+            if (line.indexOf('*/') !== -1) {
+                inBlockComment = false;
+            }
+
+            if (inBlockComment || line !== '') {
+                document.push(line);
+            }
+        }
+
+        // Return document
+
+        return document;
+    }
+
+    static getTokens(document: string[]): string[] {
+        let tokens = document;
+
+        tokens = PreProcessing.splitBlockComments(tokens);
+
+        tokens = PreProcessing.splitArray(tokens, '{', true, ['@', '#']);
+        tokens = PreProcessing.splitArray(tokens, '}', false, [',', '-']);
+        tokens = PreProcessing.splitArray(tokens, '(', false);
+        tokens = PreProcessing.splitArray(tokens, ')', false, [';']);
+        tokens = PreProcessing.splitArray(tokens, ',', false);
+        tokens = PreProcessing.splitArray(tokens, ';', false);
+
+        return tokens;
+    }
+
     static splitBlockComments(document: string[]): string[] {
         // Splitting every block comment
 
         const splitArray = document.map(line => {
-            return StyleUtil.splitLine(line, '*/', true);
+            return PreProcessing.splitLine(line, '*/', true);
         });
 
         // Flatten multiple arrays into one array
@@ -35,7 +80,7 @@ export class StyleUtil {
             // If not in block comment performing split
 
             if (!inBlockComment) {
-                let split = StyleUtil.splitLine(command, delimiter, preSpace, true, excludes);
+                let split = PreProcessing.splitLine(command, delimiter, preSpace, true, excludes);
 
                 // If command and comment are not empty
 

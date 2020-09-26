@@ -3,8 +3,8 @@ import { AstInclude } from "../ast/statement/ast-include";
 import { ConstructUtil } from "../construct-util/construct-util";
 
 export class Include {
-    static isInclude(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstInclude;
+    static isInclude(astNode: AstNode): boolean {
+        return astNode instanceof AstInclude;
     }
 
     private static includeStride(tokens: string[], index: number): number {

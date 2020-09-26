@@ -4,8 +4,8 @@ import { ConstructUtil } from "../construct-util/construct-util";
 import { StatementUtil } from "../construct-util/statement-util";
 
 export class Property {
-    static isProperty(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstProperty;
+    static isProperty(astNode: AstNode): boolean {
+        return astNode instanceof AstProperty;
     }
 
     private static propertyStride(tokens: string[], index: number): number {

@@ -27,7 +27,6 @@ export class ConstructUtil {
         return line;
     }
 
-
     static getComment(line: string): string {
         // Return comment if comment is present
 

@@ -3,8 +3,8 @@ import { AstComment } from "../ast/statement/ast-comment";
 import { ConstructUtil } from "../construct-util/construct-util";
 
 export class Comment {
-    static isComment(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstComment;
+    static isComment(astNode: AstNode): boolean {
+        return astNode instanceof AstComment;
     }
 
     private static isLineComment(tokens: string[], index: number): boolean {
@@ -20,10 +20,6 @@ export class Comment {
         const blockCommentStride = Comment.blockCommentStride(tokens, index);
 
         return isLineComment ? 1 : blockCommentStride;
-    }
-
-    private static isCommentAlone(tokens: string[], index: number): boolean {
-        return ConstructUtil.getCommand(tokens[index]).trim() === '';
     }
 
     private static constructLineComment(tokens: string[], index: number, indent: string): AstComment | undefined {
@@ -80,7 +76,7 @@ export class Comment {
     static constructComment(tokens: string[], index: number, indent: string = ''): AstComment | undefined {
         // Checking if comment is alone
 
-        const isCommentAlone = Comment.isCommentAlone(tokens, index);
+        const isCommentAlone = ConstructUtil.getCommand(tokens[index]).trim() === '';
 
         if (!isCommentAlone) {
             return undefined;

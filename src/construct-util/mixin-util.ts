@@ -1,4 +1,4 @@
-import { StyleUtil } from "../style-util";
+import { PreProcessing } from "../extension/pre-processing";
 
 export class MixinUtil {
     static getMixin(command: string): string {
@@ -41,7 +41,7 @@ export class MixinUtil {
         let conditionLine = command.substring(openRoundPosition, openCurlyPosition).trim();
         conditionLine = conditionLine.replace(/\s+/g, ' ');
 
-        let conditions = StyleUtil.splitLine(conditionLine, ')', false);
+        let conditions = PreProcessing.splitLine(conditionLine, ')', false);
 
         for (let i = 0; i < conditions.length; i++) {
             let openRoundPosition = conditions[i].indexOf('(');

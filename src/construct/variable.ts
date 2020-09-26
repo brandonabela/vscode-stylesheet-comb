@@ -2,11 +2,11 @@ import { AstNode } from "../ast/ast-node";
 import { AstVariable } from "../ast/statement/ast-variable";
 import { ConstructUtil } from "../construct-util/construct-util";
 import { StatementUtil } from "../construct-util/statement-util";
-import { StyleUtil } from "../style-util";
+import { PreProcessing } from "../extension/pre-processing";
 
 export class Variable {
-    static isVariable(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstVariable;
+    static isVariable(astNode: AstNode): boolean {
+        return astNode instanceof AstVariable;
     }
 
     private static variableStride(tokens: string[], index: number): number {
@@ -41,11 +41,11 @@ export class Variable {
 
         let split = [value];
 
-        split = StyleUtil.splitArray(split, ',', false);
-        split = StyleUtil.splitArray(split, '\'', false, [',']);
-        split = StyleUtil.splitArray(split, '"', false, [',']);
-        split = StyleUtil.splitArray(split, '(', true, ['"']);
-        split = StyleUtil.splitArray(split, ')', false);
+        split = PreProcessing.splitArray(split, ',', false);
+        split = PreProcessing.splitArray(split, '\'', false, [',']);
+        split = PreProcessing.splitArray(split, '"', false, [',']);
+        split = PreProcessing.splitArray(split, '(', true, ['"']);
+        split = PreProcessing.splitArray(split, ')', false);
 
         // Merging certain lines that belong together
 

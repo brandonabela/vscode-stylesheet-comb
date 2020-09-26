@@ -3,8 +3,8 @@ import { AstStatement } from "../ast/ast-statement";
 import { ConstructUtil } from "./construct-util";
 
 export class StatementUtil {
-    static isStatement(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstStatement;
+    static isStatement(astNode: AstNode): boolean {
+        return astNode instanceof AstStatement;
     }
 
     static statementStride(tokens: string[], index: number): number {

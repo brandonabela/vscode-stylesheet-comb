@@ -12,22 +12,19 @@ import { MixinCall } from "../construct/mixin-call";
 import { Property } from "../construct/property";
 import { Unclassified } from "../construct/unclassified";
 import { Variable } from "../construct/variable";
+import { Format } from "../extension/format";
 import { ConstructUtil } from "./construct-util";
 
 export class FunctionUtil {
-    static isFunction(categories: AstNode[], index: number): boolean {
-        return categories[index] instanceof AstFunction;
-    }
-
-    static getIndent(tabSize: number, isSpaces: boolean, depth: number): string {
-        return (isSpaces ? ' ' : '\t').repeat(tabSize * depth);
+    static isFunction(astNode: AstNode): boolean {
+        return astNode instanceof AstFunction;
     }
 
     static isCloseFunction(categories: AstNode[], index: number): boolean {
         const line = categories[index].toString();
         const command = ConstructUtil.getCommand(line).trim();
 
-        return command === '}' && categories[index] instanceof AstUnclassified;
+        return command === '}' && Unclassified.isUnclassified(categories[index]);
     }
 
     static closeCommentStride(categories: AstNode[], index: number): number {
@@ -56,7 +53,7 @@ export class FunctionUtil {
     static constructCloseComment(categories: AstNode[], index: number, indent: string): AstComment | undefined {
         // If not unclassified return undefined
 
-        if (!(categories[index] instanceof AstUnclassified)) {
+        if (!Unclassified.isUnclassified(categories[index])) {
             return undefined;
         }
 
@@ -89,7 +86,7 @@ export class FunctionUtil {
         let selectorCount = 0;
 
         for (let i = index + 1; i < categories.length; i++) {
-            if (FunctionUtil.isFunction(categories, i)) {
+            if (FunctionUtil.isFunction(categories[i])) {
                 selectorCount++;
             } else if (FunctionUtil.isCloseFunction(categories, i)) {
                 if (selectorCount === 0) {
@@ -157,36 +154,46 @@ export class FunctionUtil {
     }
 
     static constructFunction(categories: AstNode[], index: number, tabSize: number, isSpaces: boolean, depth: number = 0): AstFunction | undefined {
-        if (!(categories[index] instanceof AstFunction)) {
+        // If not a function return undefined
+
+        if (!FunctionUtil.isFunction(categories[index])) {
             return undefined;
         }
 
-        const indentSize = FunctionUtil.getIndent(tabSize, isSpaces, 1);
-        const baseIndent = FunctionUtil.getIndent(tabSize, isSpaces, depth);
-        const deepIndent = FunctionUtil.getIndent(tabSize, isSpaces, depth + 1);
+        // Finding all the necessary indentation that are needed for the function
+
+        const indentSize = Format.getIndent(tabSize, isSpaces, 1);
+        const baseIndent = Format.getIndent(tabSize, isSpaces, depth);
+        const deepIndent = Format.getIndent(tabSize, isSpaces, depth + 1);
+
+        // Updating the indication of the function
 
         let astFunction = categories[index] as AstFunction;
         astFunction.indent = baseIndent;
 
-        const selectorStride = FunctionUtil.functionStride(categories, index);
+        // Calculating the function stride
 
-        for (let i = index + 1; i < index + selectorStride; i++) {
-            if (Variable.isVariable(categories, i)) {
+        const functionStride = FunctionUtil.functionStride(categories, index);
+
+        // Loop through every category of the function
+
+        for (let i = index + 1; i < index + functionStride; i++) {
+            if (Variable.isVariable(categories[i])) {
                 const astVariable = FunctionUtil.getVariable(categories, i, deepIndent, indentSize);
                 astFunction.properties.push(astVariable);
-            } else if (MixinCall.isMixinCall(categories, i)) {
+            } else if (MixinCall.isMixinCall(categories[i])) {
                 const astMixinCall = FunctionUtil.getMixinCall(categories, i, deepIndent);
                 astFunction.properties.push(astMixinCall);
-            } else if (Property.isProperty(categories, i)) {
+            } else if (Property.isProperty(categories[i])) {
                 const astProperty = FunctionUtil.getProperty(categories, i, deepIndent);
                 astFunction.properties.push(astProperty);
-            } else if (Include.isInclude(categories, i)) {
+            } else if (Include.isInclude(categories[i])) {
                 const astInclude = FunctionUtil.getInclude(categories, i, deepIndent);
                 astFunction.properties.push(astInclude);
-            } else if (Comment.isComment(categories, i)) {
+            } else if (Comment.isComment(categories[i])) {
                 const astComment = FunctionUtil.getComment(categories, i, deepIndent);
                 astFunction.properties.push(astComment);
-            } else if (FunctionUtil.isFunction(categories, i)) {
+            } else if (FunctionUtil.isFunction(categories[i])) {
                 const subSelector = FunctionUtil.constructFunction(categories, i, tabSize, isSpaces, depth + 1);
                 astFunction.properties.push(subSelector as AstFunction);
 
@@ -195,7 +202,7 @@ export class FunctionUtil {
                 astFunction.endComment = FunctionUtil.constructCloseComment(categories, i, baseIndent);
 
                 i += FunctionUtil.closeCommentStride(categories, i);
-            } else if (Unclassified.isUnclassified(categories, i)) {
+            } else if (Unclassified.isUnclassified(categories[i])) {
                 const astUnclassified = FunctionUtil.getUnclassified(categories, i, deepIndent);
                 astFunction.properties.push(astUnclassified);
             }

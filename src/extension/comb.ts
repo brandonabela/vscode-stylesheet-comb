@@ -1,14 +1,22 @@
 import { AstFunction } from '../ast/ast-function';
 import { AstNode } from '../ast/ast-node';
-import { AstStatement } from '../ast/ast-statement';
-import { AstComment } from '../ast/statement/ast-comment';
 import { AstProperty } from '../ast/statement/ast-property';
 import { AstUnclassified } from '../ast/statement/ast-unclassified';
 import { FunctionUtil } from '../construct-util/function-util';
-import * as GROUPS from './../json/grouping.json';
-import { CombGroup } from './comb-group';
+import { StatementUtil } from '../construct-util/statement-util';
+import { Comment } from '../construct/comment';
+import { Property } from '../construct/property';
+import * as GROUPS from '../json/grouping.json';
 
-export class Combing {
+export class CombGroup {
+    constructor(
+        public nodeIndex: number,
+        public groupIndex: number,
+        public fieldIndex: number
+    ) { }
+}
+
+export class Comb {
     static getOtherComb(index: number) {
         return new CombGroup(index, GROUPS.length, 0);
     }
@@ -24,7 +32,7 @@ export class Combing {
         // If no valid groups return the other combing data
 
         if (validGroups.length === 0) {
-            return Combing.getOtherComb(index);
+            return Comb.getOtherComb(index);
         }
 
         // Find group and property indices
@@ -69,27 +77,28 @@ export class Combing {
 
         for (let i = 0; i < properties.length; i++) {
             let property = properties[i];
+            let nextProperty = properties[i + 1];
 
-            // Move comment together with property hence it needs to be the same group number
+            // If comment is followed by a property it must have the same comb group
 
-            if (property instanceof AstComment && i + 1 !== properties.length && properties[i + 1] instanceof AstProperty) {
+            if (Comment.isComment(property) && i + 1 !== properties.length && Property.isProperty(nextProperty)) {
                 const astProperty = properties[i + 1] as AstProperty;
 
-                const combGroup = Combing.getCombGroup(i, astProperty);
+                const combGroup = Comb.getCombGroup(i, astProperty);
                 combGroups.push(combGroup);
-            } else if (property instanceof AstProperty) {
+            } else if (Property.isProperty(property)) {
                 const astProperty = property as AstProperty;
 
-                const combGroup = Combing.getCombGroup(i, astProperty);
+                const combGroup = Comb.getCombGroup(i, astProperty);
                 combGroups.push(combGroup);
-            } else if (property instanceof AstStatement) {
-                const combGroup = Combing.getOtherComb(i);
+            } else if (StatementUtil.isStatement(property)) {
+                const combGroup = Comb.getOtherComb(i);
                 combGroups.push(combGroup);
             } else {
                 const astFunction = property as AstFunction;
                 property = this.combFunction(astFunction);
 
-                const combGroup = Combing.getOtherComb(i);
+                const combGroup = Comb.getOtherComb(i);
                 combGroups.push(combGroup);
             }
         }
@@ -102,23 +111,23 @@ export class Combing {
 
         // Reordering function properties
 
-        astFunction.properties = Combing.reorderFields(combGroups, properties);
+        astFunction.properties = Comb.reorderFields(combGroups, properties);
 
         // Returning the modified ast function
 
         return astFunction;
     }
 
-    static combStylesheet(stylesheet: AstNode[]): AstNode[] {
+    static combStyle(stylesheet: AstNode[]): AstNode[] {
         let astComb: AstNode[] = [];
 
         // Loop through the stylesheet nodes
 
         for (let i = 0; i < stylesheet.length; i++) {
-            if (FunctionUtil.isFunction(stylesheet, i)) {
+            if (FunctionUtil.isFunction(stylesheet[i])) {
                 const astFunction = stylesheet[i] as AstFunction;
 
-                const combAstFunction = Combing.combFunction(astFunction);
+                const combAstFunction = Comb.combFunction(astFunction);
                 astComb.push(combAstFunction);
             } else {
                 astComb.push(stylesheet[i]);
