@@ -1,65 +1,76 @@
-# vscode-style-comb README
+# Style Comb Formatter for Visual Studio Code
 
-This is the README for your extension "vscode-style-comb". After writing up a brief description, we recommend including the following sections.
+This extension is a style formatter that aims to streamline stylesheets for CSS, LESS, SCSS and SASS. This is done by formatting and grouping properties making it more readable and consistent.
 
-## Features
+<p align="center">
+    <a href="https://github.com/brandonabela/vscode-style-comb/">
+        <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/brandonabela/vscode-style-comb/Main%20CI">
+    </a>
+    <a href="https://github.com/brandonabela/vscode-style-comb/">
+        <img alt="Visual Studio Marketplace Installs" src="https://img.shields.io/visual-studio-marketplace/i/style-comb-formatter">
+    </a>
+    </a>
+    <a href="https://github.com/brandonabela/vscode-style-comb/">
+        <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/style-comb-formatter">
+    </a>
+    <a href="https://github.com/brandonabela/vscode-style-comb/">
+      <img alt="GitHub" src="https://img.shields.io/github/license/brandonabela/vscode-style-comb">
+    </a>
+</p>
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+![animated.gif](../master/assets/animated.gif)
 
-For example if there is an image subfolder under your extension project workspace:
+See the [CHANGELOG](../master/CHANGELOG.md) for the latest changes
 
-\!\[feature X\]\(images/feature-x.png\)
+## Installation
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Install through VS Code extensions. Search for <code> Style Comb Formatter </code>
 
-## Requirements
+[Visual Studio Code Market Place: Style Comb Formatter](https://marketplace.visualstudio.com/items?itemName=style-comb-formatter)
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Can also be installed in VS Code: Launch VS Code Quick Open (<kbd>CTRL</kbd> + <kbd>P</kbd>), paste the following command and press enter.
 
-## Extension Settings
+```
+ext install style-comb-formatter
+```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Usage
 
-For example:
+### Setting Default Formatter
 
-This extension contributes the following settings:
+```
+1. CMD + Shift + P
+2. Format Document With ...
+3. Configure Default Formatter ...
+4. Style Comb Formatter
+```
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+### Using Command Palette (CMD/CTRL + SHIFT + P)
 
-## Known Issues
+> The <kbd>CMD</kbd> key for Windows is <kbd>CTRL</kbd>
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Applying formatting to the entire stylesheet.
 
-## Release Notes
+```
+1. CMD + Shift + P
+2. Style Comb Formatter
+```
 
-Users appreciate release notes as you update your extension.
+### Keyboard Shortcuts (ALT + SHIFT + F)
 
-### 1.0.0
+Visual Studio Code provides default keyboard shortcuts for code formatting. 
 
-Initial release of ...
+If you don't like the defaults, you can rebind `editor.action.formatDocument` and `editor.action.formatSelection` in the keyboard shortcuts menu of vscode.
 
-### 1.0.1
+### Format On Save
 
-Fixed issue #.
+Respects `editor.formatOnSave` setting. You can turn on format-on-save on a per-language basis by scoping the setting:
 
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+```json
+// Set the default
+"editor.formatOnSave": false,
+// Enable per-language
+"[css]": {
+    "editor.formatOnSave": true
+}
+```

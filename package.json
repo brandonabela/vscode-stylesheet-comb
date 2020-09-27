@@ -4,8 +4,32 @@
 	"description": "Style formatter and property grouping",
 	"version": "1.0.0",
 	"engines": {
-		"vscode": "^1.47.0"
+		"vscode": "^1.49.0"
 	},
+	"publisher": "BrandonAbela",
+	"author": {
+		"name": "Brandon Abela"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/brandonabela/vscode-style-comb",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/brandonabela/vscode-style-comb"
+	},
+	"bugs": {
+		"url": "https://github.com/brandonabela/vscode-style-comb/issues"
+	},
+	"icon": "assets/icon.png",
+	"keywords": [
+		"formatter",
+		"css",
+		"less",
+		"sass",
+		"scss",
+		"styled-components",
+		"combed-components",
+		"style comb"
+	],
 	"categories": [
 		"Formatters"
 	],
