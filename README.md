@@ -7,11 +7,11 @@ This extension is a style formatter that aims to streamline stylesheets for CSS,
         <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/brandonabela/vscode-style-comb/Main%20CI">
     </a>
     <a href="https://github.com/brandonabela/vscode-style-comb/">
-        <img alt="Visual Studio Marketplace Installs" src="https://img.shields.io/visual-studio-marketplace/i/style-comb-formatter">
+        <img alt="Visual Studio Marketplace Installs" src="https://img.shields.io/visual-studio-marketplace/i/BrandonAbela.vscode-style-comb">
     </a>
     </a>
     <a href="https://github.com/brandonabela/vscode-style-comb/">
-        <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/style-comb-formatter">
+        <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/BrandonAbela.vscode-style-comb">
     </a>
     <a href="https://github.com/brandonabela/vscode-style-comb/">
       <img alt="GitHub" src="https://img.shields.io/github/license/brandonabela/vscode-style-comb">
@@ -26,12 +26,12 @@ See the [CHANGELOG](../master/CHANGELOG.md) for the latest changes
 
 Install through VS Code extensions. Search for <code> Style Comb Formatter </code>
 
-[Visual Studio Code Market Place: Style Comb Formatter](https://marketplace.visualstudio.com/items?itemName=style-comb-formatter)
+[Visual Studio Code Market Place: Style Comb Formatter](https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-style-comb)
 
 Can also be installed in VS Code: Launch VS Code Quick Open (<kbd>CTRL</kbd> + <kbd>P</kbd>), paste the following command and press enter.
 
 ```
-ext install style-comb-formatter
+ext install BrandonAbela.vscode-style-comb
 ```
 
 ## Usage
