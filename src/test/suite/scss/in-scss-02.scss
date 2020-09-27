@@ -1,9 +1,28 @@
-/* SCSS */
+@include theme(theme-1, #f7eb80, #bc6a49);
+@include theme(theme-2, #e4ada7, #481b16);
 
-@mixin card($width, $height, $bg, $border) {
-  width: $width; height: $height;
-  background: $bg; border: $border;
+@mixin theme($theme-name, $container-bg, $button-bg) {
+.#{$theme-name} {
+  .container {
+      background-color: $container-bg;
+
+
+    border: 1px solid #000; display: flex;
+      height: 500px;
+
+          justify-content: space-between;
+          margin: 0 auto; padding: 1em;
+    width: 50%;
+
+    .button {
+          background-color: $button-bg;
+              border: 0;        border-radius: 10px;
+              bottom: 10px;     cursor: pointer;
+                font-size: 1rem;
+                font-weight: bold;   padding: 1em 2em;
+          position: absolute;
+          right: 10px;
+    }
+    }
 }
-
-.card-1 {   @include card(300px, 200px, yellow, red 2px solid);   }
-.card-2 {    @include card(400px, 300px, lightblue, black 1px dotted);     }
+}
