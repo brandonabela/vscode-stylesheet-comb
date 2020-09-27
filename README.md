@@ -3,17 +3,17 @@
 This extension is a style formatter that aims to streamline stylesheets for CSS, LESS, SCSS and SASS. This is done by formatting and grouping properties making it more readable and consistent.
 
 <p align="center">
-    <a href="https://github.com/brandonabela/vscode-style-comb/">
+    <a href="https://github.com/brandonabela/vscode-style-comb/actions?query=workflow%3A%22Main+CI%22">
         <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/brandonabela/vscode-style-comb/Main%20CI">
     </a>
-    <a href="https://github.com/brandonabela/vscode-style-comb/">
+    <a href="https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-style-comb">
         <img alt="Visual Studio Marketplace Installs" src="https://img.shields.io/visual-studio-marketplace/i/BrandonAbela.vscode-style-comb">
     </a>
     </a>
-    <a href="https://github.com/brandonabela/vscode-style-comb/">
+    <a href="https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-style-comb">
         <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/BrandonAbela.vscode-style-comb">
     </a>
-    <a href="https://github.com/brandonabela/vscode-style-comb/">
+    <a href="https://github.com/brandonabela/vscode-style-comb/blob/master/LICENSE">
       <img alt="GitHub" src="https://img.shields.io/github/license/brandonabela/vscode-style-comb">
     </a>
 </p>
