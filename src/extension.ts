@@ -33,7 +33,7 @@ function applyFormat(document: vscode.TextDocument): string {
 }
 
 export function activate() {
-	vscode.commands.registerCommand('extension.vscode-style-comb', () => {
+	vscode.commands.registerCommand('extension.vscode-stylesheet-comb', () => {
 		const { activeTextEditor } = vscode.window;
 
 		if (activeTextEditor && languageSupported(activeTextEditor.document.languageId)) {

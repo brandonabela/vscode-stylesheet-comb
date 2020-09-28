@@ -1,7 +1,7 @@
 {
-	"name": "vscode-style-comb",
-	"displayName": "Style Comb Formatter",
-	"description": "Style formatter and property grouping",
+	"name": "vscode-stylesheet-comb",
+	"displayName": "Stylesheet Comb Formatter",
+	"description": "Stylesheet formatter and property grouping",
 	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.49.0"
@@ -11,13 +11,13 @@
 		"name": "Brandon Abela"
 	},
 	"license": "MIT",
-	"homepage": "https://github.com/brandonabela/vscode-style-comb",
+	"homepage": "https://github.com/brandonabela/vscode-stylesheet-comb",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/brandonabela/vscode-style-comb"
+		"url": "https://github.com/brandonabela/vscode-stylesheet-comb"
 	},
 	"bugs": {
-		"url": "https://github.com/brandonabela/vscode-style-comb/issues"
+		"url": "https://github.com/brandonabela/vscode-stylesheet-comb/issues"
 	},
 	"icon": "assets/icon.png",
 	"keywords": [
@@ -28,7 +28,8 @@
 		"scss",
 		"styled-components",
 		"combed-components",
-		"style comb"
+		"stylesheet comb",
+		"stylesheet formatter"
 	],
 	"categories": [
 		"Formatters"
@@ -40,8 +41,8 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.vscode-style-comb",
-				"title": "Style Comb Format"
+				"command": "extension.vscode-stylesheet-comb",
+				"title": "Stylesheet Comb Format"
 			}
 		]
 	},

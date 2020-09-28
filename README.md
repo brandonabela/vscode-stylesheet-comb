@@ -1,20 +1,20 @@
-# Style Comb Formatter for Visual Studio Code
+# Stylesheet Comb Formatter for Visual Studio Code
 
-This extension is a style formatter that aims to streamline stylesheets for CSS, LESS, SCSS and SASS. This is done by formatting and grouping properties making it more readable and consistent.
+This extension is a stylesheet formatter that aims to streamline stylesheets for CSS, LESS, SCSS and SASS. This is done by formatting and grouping properties making it more readable and consistent.
 
 <p align="center">
-    <a href="https://github.com/brandonabela/vscode-style-comb/actions?query=workflow%3A%22Main+CI%22">
-        <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/brandonabela/vscode-style-comb/Main%20CI">
+    <a href="https://github.com/brandonabela/vscode-stylesheet-comb/actions?query=workflow%3A%22Main+CI%22">
+        <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/brandonabela/vscode-stylesheet-comb/Main%20CI">
     </a>
-    <a href="https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-style-comb">
-        <img alt="Visual Studio Marketplace Installs" src="https://img.shields.io/visual-studio-marketplace/i/BrandonAbela.vscode-style-comb">
+    <a href="https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-stylesheet-comb">
+        <img alt="Visual Studio Marketplace Installs" src="https://img.shields.io/visual-studio-marketplace/i/BrandonAbela.vscode-stylesheet-comb">
     </a>
     </a>
-    <a href="https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-style-comb">
-        <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/BrandonAbela.vscode-style-comb">
+    <a href="https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-stylesheet-comb">
+        <img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/BrandonAbela.vscode-stylesheet-comb">
     </a>
-    <a href="https://github.com/brandonabela/vscode-style-comb/blob/master/LICENSE">
-      <img alt="GitHub" src="https://img.shields.io/github/license/brandonabela/vscode-style-comb">
+    <a href="https://github.com/brandonabela/vscode-stylesheet-comb/blob/master/LICENSE">
+      <img alt="GitHub" src="https://img.shields.io/github/license/brandonabela/vscode-stylesheet-comb">
     </a>
 </p>
 
@@ -24,14 +24,14 @@ See the [CHANGELOG](../master/CHANGELOG.md) for the latest changes
 
 ## Installation
 
-Install through VS Code extensions. Search for <code> Style Comb Formatter </code>
+Install through VS Code extensions. Search for <code> Stylesheet Comb Formatter </code>
 
-[Visual Studio Code Market Place: Style Comb Formatter](https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-style-comb)
+[Visual Studio Code Market Place: Stylesheet Comb Formatter](https://marketplace.visualstudio.com/items?itemName=BrandonAbela.vscode-stylesheet-comb)
 
 Can also be installed in VS Code: Launch VS Code Quick Open (<kbd>CTRL</kbd> + <kbd>P</kbd>), paste the following command and press enter.
 
 ```
-ext install BrandonAbela.vscode-style-comb
+ext install BrandonAbela.vscode-stylesheet-comb
 ```
 
 ## Usage
@@ -42,7 +42,7 @@ ext install BrandonAbela.vscode-style-comb
 1. CMD + Shift + P
 2. Format Document With ...
 3. Configure Default Formatter ...
-4. Style Comb Formatter
+4. Stylesheet Comb Formatter
 ```
 
 ### Using Command Palette (CMD/CTRL + SHIFT + P)
@@ -53,7 +53,7 @@ Applying formatting to the entire stylesheet.
 
 ```
 1. CMD + Shift + P
-2. Style Comb Formatter
+2. Stylesheet Comb Formatter
 ```
 
 ### Keyboard Shortcuts (ALT + SHIFT + F)
