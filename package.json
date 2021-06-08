@@ -4,7 +4,7 @@
 	"description": "Stylesheet formatter and property grouping",
 	"version": "1.0.0",
 	"engines": {
-		"vscode": "^1.49.0"
+		"vscode": "^1.56.0"
 	},
 	"publisher": "BrandonAbela",
 	"author": {
