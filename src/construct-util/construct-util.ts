@@ -8,9 +8,19 @@ export class ConstructUtil {
         const lineCommentPosition = line.indexOf('//');
         const blockCommentPosition = line.indexOf('/*');
 
+        // Remove invalid positions
+
+        const validPositions = [lineCommentPosition, blockCommentPosition].filter(x => x !== -1);
+
         // Return the valid comment positions
 
-        return [lineCommentPosition, blockCommentPosition].filter(x => x !== -1);
+        const urlPosition = line.indexOf('://');
+
+        if (urlPosition !== -1 && urlPosition < Math.min(...validPositions)) {
+            return [];
+        }
+
+        return validPositions;
     }
 
     static getCommand(line: string): string {
@@ -39,6 +49,11 @@ export class ConstructUtil {
         // Return empty comment if comment is not present
 
         return '';
+    }
+
+    static commandCountToken(tokens: string[], index: number, searchString: string): number {
+        const command = ConstructUtil.getCommand(tokens[index]);
+        return command.split(searchString).length - 1;
     }
 
     static commandIndexOf(tokens: string[], index: number, searchString: string): number {
@@ -76,8 +91,12 @@ export class ConstructUtil {
 
         // Loop through token and if end token is present return the stride length
 
+        let singleQuoteCount = 0;
+
         for (let i = index + 1; i < tokens.length; i++) {
-            if (ConstructUtil.commandIndexOf(tokens, i, endToken) !== -1) {
+            singleQuoteCount += ConstructUtil.commandCountToken(tokens, i, '\'');
+
+            if (singleQuoteCount % 2 === 0 && ConstructUtil.commandIndexOf(tokens, i, endToken) !== -1) {
                 return (i + 1) - index;
             }
         }

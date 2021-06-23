@@ -37,11 +37,25 @@ export class Include {
 
         const semiColonPosition = command.lastIndexOf(';');
 
-        // Format and return the include line
+        // Format the include line
 
         let value = command.substring(0, semiColonPosition).trim().replace(/\s+/g, ' ');
         value = value.split('( ').join('(');
         value = value.split(') ').join(')');
+
+        // Check if import has url
+
+        if (value.indexOf('url') !== -1) {
+            const firstQuotePosition = value.indexOf('\'');
+            const secondQuotePosition = value.substring(firstQuotePosition + 1).indexOf('\'');
+
+            const originalQuote = value.substring(firstQuotePosition + 1, (firstQuotePosition + 1) + secondQuotePosition);
+            const modifiedQuote = originalQuote.split(' ').join('');
+
+           value = value.replace(originalQuote, modifiedQuote);
+        }
+
+        // Return the formatted include line
 
         return value;
     }
