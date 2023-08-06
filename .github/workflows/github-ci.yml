@@ -1,5 +1,4 @@
 name: Main CI
-
 on: [push, pull_request]
 
 jobs:
@@ -7,14 +6,14 @@ jobs:
     name: 🧪 Unit Test
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - run: npm install
       - run: npm test
   lint:
     name: ✅ Lint
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - run: npm install
       - run: npm run lint
   build:
@@ -22,6 +21,6 @@ jobs:
     runs-on: windows-latest
     needs: [test, lint]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - run: npm install
       - run: npm build
