@@ -2,7 +2,7 @@ name: Main CI
 on: [push, pull_request]
 
 jobs:
-  install-deps:
+  install:
     name: 📦 Install Dependencies
     runs-on: windows-latest
     steps:
@@ -13,6 +13,7 @@ jobs:
   test:
     name: 🧪 Unit Test
     runs-on: windows-latest
+    needs: [install]
     steps:
       - name: Run Unit Tests
         run: npm test
@@ -20,6 +21,7 @@ jobs:
   lint:
     name: ✅ Lint
     runs-on: windows-latest
+    needs: [install]
     steps:
       - name: Run Linter
         run: npm run lint
