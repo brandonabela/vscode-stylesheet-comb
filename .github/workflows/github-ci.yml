@@ -16,7 +16,6 @@ jobs:
     runs-on: windows-latest
     needs: [install]
     steps:
-      - uses: ./
       - name: Run Unit Tests
         run: npm test
 
@@ -25,7 +24,6 @@ jobs:
     runs-on: windows-latest
     needs: [install]
     steps:
-      - uses: ./
       - name: Run Linter
         run: npm run lint
 
@@ -34,6 +32,5 @@ jobs:
     runs-on: windows-latest
     needs: [test, lint]
     steps:
-      - uses: ./
       - name: Build Project
         run: npm build
