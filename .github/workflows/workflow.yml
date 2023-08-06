@@ -1,0 +1,22 @@
+name: Build
+on: [push, pull_request]
+
+jobs:
+  build:
+    concurrency: ci-${{ github.ref }}
+    runs-on: windows-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies ⚙️
+        run: npm install
+
+      - name: Lint 🚨
+        run: npm run lint
+
+      - name: Unit Test 🧪
+        run: npm run test
+
+      - name: Build 🔧
+        run: npm run build
