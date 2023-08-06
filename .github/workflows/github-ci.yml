@@ -2,25 +2,41 @@ name: Main CI
 on: [push, pull_request]
 
 jobs:
+  install-deps:
+    name: 📦 Install Dependencies
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: npm install
+
+  terminate-vscode:
+    name: 🛑 Terminate Visual Studio Code
+    runs-on: windows-latest
+    steps:
+      - name: Terminate Visual Studio Code
+        run: taskkill /IM Code.exe /F || echo "No instances of Code running"
+
   test:
     name: 🧪 Unit Test
     runs-on: windows-latest
+    needs: terminate-vscode
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: npm test
+      - name: Run Unit Tests
+        run: npm test
+
   lint:
     name: ✅ Lint
     runs-on: windows-latest
+    needs: terminate-vscode
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: npm run lint
+      - name: Run Linter
+        run: npm run lint
+
   build:
     name: 🛠 Build
     runs-on: windows-latest
     needs: [test, lint]
     steps:
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: npm build
+      - name: Build Project
+        run: npm build
