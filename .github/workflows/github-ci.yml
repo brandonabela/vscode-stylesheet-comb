@@ -10,17 +10,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-  terminate-vscode:
-    name: 🛑 Terminate Visual Studio Code
-    runs-on: windows-latest
-    steps:
-      - name: Terminate Visual Studio Code
-        run: taskkill /IM Code.exe /F || echo "No instances of Code running"
-
   test:
     name: 🧪 Unit Test
     runs-on: windows-latest
-    needs: terminate-vscode
     steps:
       - name: Run Unit Tests
         run: npm test
@@ -28,7 +20,6 @@ jobs:
   lint:
     name: ✅ Lint
     runs-on: windows-latest
-    needs: terminate-vscode
     steps:
       - name: Run Linter
         run: npm run lint
