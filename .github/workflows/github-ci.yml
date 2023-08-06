@@ -17,7 +17,7 @@ jobs:
     needs: [install]
     steps:
       - name: Run Unit Tests
-        run: npm test
+        run: npm run test
 
   lint:
     name: ✅ Lint
