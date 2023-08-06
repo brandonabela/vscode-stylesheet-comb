@@ -15,17 +15,16 @@ jobs:
     runs-on: windows-latest
     needs: [install]
     steps:
-      - path: .
       - name: Run Unit Tests
+        uses: ./
         run: npm test
 
   lint:
     name: ✅ Lint
     runs-on: windows-latest
     needs: [install]
-    steps:
-      - path: .
       - name: Run Linter
+        uses: ./
         run: npm run lint
 
   build:
@@ -33,6 +32,6 @@ jobs:
     runs-on: windows-latest
     needs: [test, lint]
     steps:
-      - path: .
       - name: Build Project
+        uses: ./
         run: npm build
