@@ -1,3 +1,4 @@
+
 name: Main CI
 on: [push, pull_request]
 
@@ -15,16 +16,17 @@ jobs:
     runs-on: windows-latest
     needs: [install]
     steps:
+      - uses: ./
       - name: Run Unit Tests
-        uses: ./
         run: npm test
 
   lint:
     name: ✅ Lint
     runs-on: windows-latest
     needs: [install]
+    steps:
+      - uses: ./
       - name: Run Linter
-        uses: ./
         run: npm run lint
 
   build:
@@ -32,6 +34,6 @@ jobs:
     runs-on: windows-latest
     needs: [test, lint]
     steps:
+      - uses: ./
       - name: Build Project
-        uses: ./
         run: npm build
