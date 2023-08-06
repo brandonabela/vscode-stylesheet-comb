@@ -20,7 +20,6 @@ jobs:
   build:
     name: 🛠 Build
     runs-on: windows-latest
-    # This job will only run if both `test` and `lint` jobs run successfully.
     needs: [test, lint]
     steps:
       - uses: actions/checkout@v1
